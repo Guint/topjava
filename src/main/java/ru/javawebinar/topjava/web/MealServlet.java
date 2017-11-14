@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -32,6 +33,7 @@ public class MealServlet extends HttpServlet {
         String forward = "";
         if (action.equalsIgnoreCase("delete")) {
             int mealId = Integer.parseInt(req.getParameter("mealId"));
+            log.info("Delete {}", mealId);
             dao.delete(mealId);
             forward = MEAL_LIST;
             List<MealWithExceed> mealList = MealsUtil.getFilteredWithExceeded(dao.getAll(), LocalTime.MIN, LocalTime.MAX, 2000);
@@ -45,6 +47,7 @@ public class MealServlet extends HttpServlet {
 
         } else if (action.equalsIgnoreCase("meals")) {
             forward = MEAL_LIST;
+            log.info("GetAll");
             List<MealWithExceed> mealList = MealsUtil.getFilteredWithExceeded(dao.getAll(), LocalTime.MIN, LocalTime.MAX, 2000);
             req.setAttribute("mealList", mealList);
 
@@ -59,19 +62,23 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         String dt = req.getParameter("dateTime");
-        log.info(dt);
-        LocalDateTime dateTime = LocalDateTime.parse(dt, formatter);
-        String description = (String) req.getAttribute("description");
-        int calories = (int) req.getAttribute("calories");
-        String mealId = (String) req.getAttribute("id");
+        LocalDateTime dateTime = LocalDateTime.parse(dt);
+        String description = req.getParameter("description");
+        int calories = Integer.parseInt(req.getParameter("calories"));
+        String idString = req.getParameter("mealId");
         Meal meal = new Meal(dateTime, description, calories);
-        if (mealId == null || mealId.isEmpty()) {
-            dao.add(meal);
+        if (Objects.isNull(idString) || idString.isEmpty()) {
+            log.info("Create");
+            dao.save(meal);
         } else {
-            meal.setId(Integer.parseInt(mealId));
-            dao.update(meal);
+            int id = Integer.parseInt(idString);
+            log.info("Edit {}", id);
+            meal.setId(id);
+            dao.save(meal);
         }
+
         List<MealWithExceed> mealList = MealsUtil.getFilteredWithExceeded(dao.getAll(), LocalTime.MIN, LocalTime.MAX, 2000);
         req.setAttribute("mealList", mealList);
         req.getRequestDispatcher(MEAL_LIST).forward(req, resp);

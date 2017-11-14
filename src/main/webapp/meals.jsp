@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>Список еды</title>
@@ -9,6 +10,7 @@
 <table border="1">
     <thead>
     <tr>
+        <th>ID</th>
         <th>Дата/Время</th>
         <th>Описание</th>
         <th>Калории</th>
@@ -17,26 +19,16 @@
     </thead>
     <tbody>
     <c:forEach items="${mealList}" var="meal">
-        <c:choose>
-            <c:when test="${meal.exceed}">
-                <tr bgcolor="red">
-                    <td><c:out value="${meal.dateTime}"/></td>
-                    <td><c:out value="${meal.description}"/></td>
-                    <td><c:out value="${meal.calories}"/></td>
-                    <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>">Редактировать</a></td>
-                    <td><a href="meals?action=delete&mealId=<c:out value="${meal.id}"/>">Удалить</a></td>
-                </tr>
-            </c:when>
-            <c:otherwise>
-                <tr bgcolor="green">
-                    <td><c:out value="${meal.dateTime}"/></td>
-                    <td><c:out value="${meal.description}"/></td>
-                    <td><c:out value="${meal.calories}"/></td>
-                    <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>">Редактировать</a></td>
-                    <td><a href="meals?action=delete&mealId=<c:out value="${meal.id}"/>">Удалить</a></td>
-                </tr>
-            </c:otherwise>
-        </c:choose>
+        <tr bgcolor="${meal.exceed ? "red" : "green"}">
+            <td><c:out value="${meal.id}"/></td>
+            <td><fmt:parseDate value="${meal.dateTime}" pattern="y-M-dd'T'H:m" var="parsedDate"/>
+                <fmt:formatDate value="${parsedDate}" pattern="dd.MM.yyyy HH:mm"/>
+            </td>
+            <td><c:out value="${meal.description}"/></td>
+            <td><c:out value="${meal.calories}"/></td>
+            <td><a href="meals?action=edit&mealId=${meal.id}">Редактировать</a></td>
+            <td><a href="meals?action=delete&mealId=${meal.id}">Удалить</a></td>
+        </tr>
     </c:forEach>
     </tbody>
 </table>

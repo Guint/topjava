@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.dao;
 
+import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.web.MealServlet;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -12,13 +14,28 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InMemoryMealDaoImpl  implements MealDao {
-    private static Map<Integer, Meal> mealDB = new ConcurrentHashMap<>();
-    private static AtomicInteger idCounter = new AtomicInteger(0);
+import static org.slf4j.LoggerFactory.getLogger;
+
+public class InMemoryMealDaoImpl implements MealDao {
+    private Map<Integer, Meal> mealDB = new ConcurrentHashMap<>();
+    private AtomicInteger idCounter = new AtomicInteger(0);
+
+    {
+
+        save(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500));
+        save(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000));
+        save(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500));
+        save(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000));
+        save(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500));
+        save(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510));
+
+    }
 
     @Override
-    public void add(Meal meal) {
-        meal.setId(idCounter.incrementAndGet());
+    public void save(Meal meal) {
+        if (meal.getId() == 0) {
+            meal.setId(idCounter.incrementAndGet());
+        }
         mealDB.put(meal.getId(), meal);
     }
 
@@ -32,15 +49,11 @@ public class InMemoryMealDaoImpl  implements MealDao {
         mealDB.remove(id);
     }
 
-    @Override
-    public void update(Meal meal) {
-        mealDB.put(meal.getId(), meal);
-    }
 
     @Override
     public List<Meal> getAll() {
         List<Meal> mealList = new ArrayList<>();
-        mealDB.forEach((key, value) -> mealList.add(key - 1, value));
+        mealDB.forEach((key, value) -> mealList.add(value));
         return mealList;
     }
 }
