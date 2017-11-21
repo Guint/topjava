@@ -22,18 +22,18 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(meal->save(meal, AuthorizedUser.id()));
+        MealsUtil.MEALS.forEach(this::save);
     }
 
     @Override
-    public Meal save(Meal meal, int userId) {
-        log.info("save {}, {}", meal, userId);
+    public Meal save(Meal meal) {
+        log.info("save {}", meal);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            meal.setUserId(userId);
+            return repository.put(meal.getId(), meal);
         }
         Meal inRepMeal = repository.get(meal.getId());
-        if (inRepMeal != null && inRepMeal.getUserId() == userId) {
+        if (inRepMeal != null && inRepMeal.getUserId() == meal.getUserId()) {
             return repository.put(meal.getId(), meal);
         } else {
             return null;
@@ -63,10 +63,11 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAll() {
+    public List<Meal> getAll(int userId) {
         log.info("getAll");
         return repository.values()
                 .stream()
+                .filter(meal -> meal.getUserId() == userId)
                 .sorted((meal, nextMeal) -> nextMeal.getDateTime().compareTo(meal.getDateTime()))
                 .collect(Collectors.toList());
     }
