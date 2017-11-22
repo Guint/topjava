@@ -7,11 +7,11 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 public class ValidationUtil {
 
     public static void checkNotFoundWithId(boolean found, int id) {
-        checkNotFound(found, "id=" + id);
+        checkNotFound(found, "getId=" + id);
     }
 
     public static <T> T checkNotFoundWithId(T object, int id) {
-        return checkNotFound(object, "id=" + id);
+        return checkNotFound(object, "getId=" + id);
     }
 
     public static <T> T checkNotFound(T object, String msg) {
@@ -27,7 +27,7 @@ public class ValidationUtil {
 
     public static void checkNew(AbstractBaseEntity entity) {
         if (!entity.isNew()) {
-            throw new IllegalArgumentException(entity + " must be new (id=null)");
+            throw new IllegalArgumentException(entity + " must be new (getId=null)");
         }
     }
 
@@ -36,7 +36,7 @@ public class ValidationUtil {
         if (entity.isNew()) {
             entity.setId(id);
         } else if (entity.getId() != id) {
-            throw new IllegalArgumentException(entity + " must be with id=" + id);
+            throw new IllegalArgumentException(entity + " must be with getId=" + id);
         }
     }
 }

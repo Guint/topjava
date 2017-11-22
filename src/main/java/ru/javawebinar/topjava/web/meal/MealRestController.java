@@ -10,7 +10,8 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.*;
@@ -28,17 +29,16 @@ public class MealRestController {
 
     public List<MealWithExceed> getAll() {
         log.info("getAll");
-        return MealsUtil.getWithExceeded(service.getAll(AuthorizedUser.id()), AuthorizedUser.getCaloriesPerDay());
+        return MealsUtil.getWithExceeded(service.getAll(AuthorizedUser.getId()), AuthorizedUser.getCaloriesPerDay());
     }
-
     public Meal get(int id) {
         log.info("get {}", id);
-        return service.get(id, AuthorizedUser.id());
+        return service.get(id, AuthorizedUser.getId());
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
-        service.delete(id, AuthorizedUser.id());
+        service.delete(id, AuthorizedUser.getId());
     }
 
     public Meal create(Meal meal) {
@@ -48,8 +48,13 @@ public class MealRestController {
     }
 
     public void update(Meal meal, int id) {
-        log.info("update {} whit id {}", meal, id);
+        log.info("update {} with getId {}", meal, id);
         assureIdConsistent(meal, id);
         service.update(meal);
+    }
+
+    public List<MealWithExceed> getBetween(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        log.info("getBetween {}, {}, {}, {}", startDate, endDate, startTime, endTime);
+        return MealsUtil.getWithExceeded(service.getBetween(startDate, endDate, startTime, endTime, AuthorizedUser.getId()), AuthorizedUser.getCaloriesPerDay());
     }
 }
