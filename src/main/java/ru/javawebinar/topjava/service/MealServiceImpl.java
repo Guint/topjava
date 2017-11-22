@@ -51,10 +51,8 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public List<Meal> getBetween(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, int userId) {
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
-        LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
-        return repository.getBetween(startDateTime, endDateTime, userId);
+    public List<Meal> getBetween(LocalDate startDate, LocalDate endDate, int userId) {
+        return repository.getBetween(startDate, endDate, userId);
     }
 }
 

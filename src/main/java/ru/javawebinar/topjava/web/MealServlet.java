@@ -50,7 +50,7 @@ public class MealServlet extends HttpServlet {
 
             case "form":
             default:
-                String id = request.getParameter("getId");
+                String id = request.getParameter("id");
 
                 Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                         LocalDateTime.parse(request.getParameter("dateTime")),
@@ -97,7 +97,7 @@ public class MealServlet extends HttpServlet {
     }
 
     private int getId(HttpServletRequest request) {
-        String paramId = Objects.requireNonNull(request.getParameter("getId"));
+        String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.valueOf(paramId);
     }
 }

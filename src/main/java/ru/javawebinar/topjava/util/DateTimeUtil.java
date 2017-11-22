@@ -26,7 +26,7 @@ public class DateTimeUtil {
         return time == null || time.isEmpty() ? def : LocalTime.parse(time);
     }
 
-    public static boolean isDateTimeBetween(LocalDateTime ldt, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return ldt.compareTo(startDateTime) >= 0 && ldt.compareTo(endDateTime) <= 0;
+    public static boolean isDateBetween(LocalDate ld, LocalDate startDate, LocalDate endDate) {
+        return ld.compareTo(startDate) >= 0 && ld.compareTo(endDate) <= 0;
     }
 }

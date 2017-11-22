@@ -22,5 +22,5 @@ public interface MealService {
 
     List<Meal> getAll(int userId);
 
-    List<Meal> getBetween(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, int userId);
+    List<Meal> getBetween(LocalDate startDate, LocalDate endDate, int userId);
 }

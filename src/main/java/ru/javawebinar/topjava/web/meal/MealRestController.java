@@ -55,6 +55,6 @@ public class MealRestController {
 
     public List<MealWithExceed> getBetween(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getBetween {}, {}, {}, {}", startDate, endDate, startTime, endTime);
-        return MealsUtil.getWithExceeded(service.getBetween(startDate, endDate, startTime, endTime, AuthorizedUser.getId()), AuthorizedUser.getCaloriesPerDay());
+        return MealsUtil.getFilteredWithExceeded(service.getBetween(startDate, endDate, AuthorizedUser.getId()), startTime, endTime, AuthorizedUser.getCaloriesPerDay());
     }
 }
