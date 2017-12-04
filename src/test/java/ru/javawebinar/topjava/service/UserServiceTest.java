@@ -16,7 +16,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.util.Collections;
 import java.util.List;
 
-import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.service.UserTestData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
