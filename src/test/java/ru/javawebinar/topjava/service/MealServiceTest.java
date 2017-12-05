@@ -5,11 +5,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 
 import java.time.LocalDate;
@@ -85,5 +87,43 @@ public class MealServiceTest {
         meal.setId(created.getId());
         assertMatch(service.getAll(USER_ID), meal, USER_DINNER, USER_LUNCH, USER_BREAKFAST);
     }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteNotFoundMealId(){
+        service.delete(1, USER_ID);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteNotFoundUserId(){
+        service.delete(USER_BREAKFAST.getId(), 1);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void updateNotFoundMealId(){
+        service.update(new Meal(1, LocalDateTime.now(), "Dinner", 200), USER_ID);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void updateNotFoundUserId(){
+        service.update(USER_BREAKFAST, 1);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getNotFoundMealId(){
+        service.get(1, USER_ID);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getNotFoundUserId(){
+        service.get(USER_BREAKFAST.getId(), 1);
+    }
+
+    @Test(expected = DataAccessException.class)
+    public void createDuplicateDate(){
+        LocalDateTime now = LocalDateTime.now();
+        service.create(new Meal(now, "Dinner", 200), USER_ID);
+        service.create(new Meal(now, "Lunch", 1000), USER_ID);
+    }
+
 
 }

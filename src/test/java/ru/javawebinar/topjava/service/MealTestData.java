@@ -16,7 +16,7 @@ public class MealTestData {
     public static int id = ADMIN_ID;
 
 
-    public static final Meal USER_BREAKFAST = new Meal(++id, LocalDateTime.of(2017, 10, 19, 10,0), "Завтрак", 200);
+    public static final Meal USER_BREAKFAST = new Meal(++id, LocalDateTime.of(2017, 10, 19, 9,0), "Завтрак", 200);
     public static final Meal USER_LUNCH = new Meal(++id, LocalDateTime.of(2017, 10, 19, 13,0), "Обед", 500);
     public static final Meal USER_DINNER = new Meal(++id, LocalDateTime.of(2017, 10, 19, 19,0), "Ужин", 1000);
 
